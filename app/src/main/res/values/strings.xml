@@ -4,4 +4,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="date">Date</string>
     <string name="something_went_wrong">Something went wrong!!</string>
+    <string name="news_image">News Image</string>
 </resources>
