@@ -25,7 +25,11 @@ class ArticleViewModel(private val repository: ArticlesRepository) : ViewModel()
                 val repositoryResponse = repository.getNewsArticles()
                 val articles =
                     Gson().fromJson(repositoryResponse, NewsApiResponse::class.java)
-                _articles.postValue(NetworkResult.Success(articles.articles))
+                if (articles.status == "ok") {
+                    _articles.postValue(NetworkResult.Success(articles.articles))
+                } else {
+                    _articles.postValue(NetworkResult.Failure("Something went wrong!!"))
+                }
             } catch (ioException: IOException) {
                 _articles.postValue(NetworkResult.Failure("Something went wrong!!"))
                 Log.e(this.javaClass.name, ioException.message.toString())
