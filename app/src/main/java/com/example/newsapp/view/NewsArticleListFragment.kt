@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,20 +19,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.R
-import com.example.newsapp.databinding.FragmentArticleListBinding
-import com.example.newsapp.model.adapters.ArticlesAdapter
+import com.example.newsapp.databinding.FragmentNewsArticleListBinding
+import com.example.newsapp.model.adapters.NewsArticleAdapter
 import com.example.newsapp.model.api.NewsArticle
 import com.example.newsapp.model.network.NetworkResult
-import com.example.newsapp.viewmodel.ArticleViewModel
+import com.example.newsapp.viewmodel.NewsArticleViewModel
 import com.example.newsapp.viewmodel.ViewModelFactory
 
 
-class ArticleListFragment : Fragment(), ArticlesAdapter.OnItemClickListener {
+class NewsArticleListFragment : Fragment(), NewsArticleAdapter.OnItemClickListener {
 
-    private lateinit var dataBinding: FragmentArticleListBinding
-    private lateinit var articlesAdapter: ArticlesAdapter
-    private lateinit var articles: MutableList<NewsArticle>
-    private lateinit var viewModel: ArticleViewModel
+    private lateinit var dataBinding: FragmentNewsArticleListBinding
+    private lateinit var newsArticleAdapter: NewsArticleAdapter
+    private lateinit var newsArticles: MutableList<NewsArticle>
+    private lateinit var viewModel: NewsArticleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,25 +42,26 @@ class ArticleListFragment : Fragment(), ArticlesAdapter.OnItemClickListener {
     }
 
     private fun initAdapter() {
-        articles = mutableListOf()
-        articlesAdapter = ArticlesAdapter(articles)
-        articlesAdapter.setOnItemClickListener(this)
+        newsArticles = mutableListOf()
+        newsArticleAdapter = NewsArticleAdapter(newsArticles)
+        newsArticleAdapter.setOnItemClickListener(this)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initViewModel() {
         viewModel =
-            ViewModelProvider(requireActivity(), ViewModelFactory())[ArticleViewModel::class.java]
-        viewModel.articles.observe(this) { articles ->
+            ViewModelProvider(requireActivity(), ViewModelFactory())[NewsArticleViewModel::class.java]
+        viewModel.newsArticles.observe(this) { articles ->
             when (articles) {
                 is NetworkResult.Success -> {
+                    Log.i("Halwa", articles.toString())
                     dataBinding.pbLoading.visibility = View.INVISIBLE
-                    this.articles.addAll(articles.data!!)
-                    this.articles.sortBy {
+                    this.newsArticles.addAll(articles.data!!)
+                    this.newsArticles.sortBy {
                         it.publishedAt
                     }
-                    this.articles.reverse()
-                    articlesAdapter.notifyDataSetChanged()
+                    this.newsArticles.reverse()
+                    newsArticleAdapter.notifyDataSetChanged()
                 }
 
                 is NetworkResult.Loading -> {
@@ -84,7 +86,7 @@ class ArticleListFragment : Fragment(), ArticlesAdapter.OnItemClickListener {
     ): View {
         // Inflate the layout for this fragment
         dataBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_article_list, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.fragment_news_article_list, container, false)
 
         initRecyclerView()
 
@@ -93,7 +95,7 @@ class ArticleListFragment : Fragment(), ArticlesAdapter.OnItemClickListener {
 
     private fun initRecyclerView() {
         dataBinding.rvArticles.layoutManager = LinearLayoutManager(requireContext())
-        dataBinding.rvArticles.adapter = articlesAdapter
+        dataBinding.rvArticles.adapter = newsArticleAdapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,8 +110,8 @@ class ArticleListFragment : Fragment(), ArticlesAdapter.OnItemClickListener {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.itemSort -> {
-                        articles.reverse()
-                        articlesAdapter.notifyDataSetChanged()
+                        newsArticles.reverse()
+                        newsArticleAdapter.notifyDataSetChanged()
                         true
                     }
                     else -> false
@@ -119,7 +121,7 @@ class ArticleListFragment : Fragment(), ArticlesAdapter.OnItemClickListener {
     }
 
     override fun onClick(position: Int) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(articles[position].url))
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(newsArticles[position].url))
         startActivity(browserIntent)
     }
 }

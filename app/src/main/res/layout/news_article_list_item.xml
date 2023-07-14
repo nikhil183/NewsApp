@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="article"
+            name="newsArticle"
             type="com.example.newsapp.model.api.NewsArticle" />
     </data>
 
@@ -18,7 +18,7 @@
             android:id="@+id/ivIcon"
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:src="@{article.urlToImage}"
+            android:src="@{newsArticle.urlToImage}"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:padding="5dp"
-            android:text="@{article.title}"
+            android:text="@{newsArticle.title}"
             android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:textStyle="bold"
@@ -50,7 +50,7 @@
             android:layout_marginBottom="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{article.author}"
+            android:text="@{newsArticle.author}"
             app:layout_constraintBottom_toTopOf="@id/tvBorder"
             app:layout_constraintEnd_toStartOf="@id/tvDate"
             app:layout_constraintStart_toEndOf="@id/ivIcon"
@@ -64,7 +64,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toTopOf="@id/tvBorder"
-            android:text="@{article.publishedAt}"
+            android:text="@{newsArticle.publishedAt}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvArticleTitle" />
 

@@ -10,7 +10,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-class ArticlesRepository {
+class NewsArticleRepository {
     suspend fun getNewsArticles(): String {
         val jsonStringHolder = StringBuilder()
         withContext(Dispatchers.IO) {
