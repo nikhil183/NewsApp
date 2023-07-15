@@ -26,7 +26,6 @@ import com.example.newsapp.model.network.NetworkResult
 import com.example.newsapp.viewmodel.NewsArticleViewModel
 import com.example.newsapp.viewmodel.ViewModelFactory
 
-
 class NewsArticleListFragment : Fragment(), NewsArticleAdapter.OnItemClickListener {
 
     private lateinit var dataBinding: FragmentNewsArticleListBinding
@@ -54,9 +53,10 @@ class NewsArticleListFragment : Fragment(), NewsArticleAdapter.OnItemClickListen
         viewModel.newsArticles.observe(this) { articles ->
             when (articles) {
                 is NetworkResult.Success -> {
-                    Log.i("Halwa", articles.toString())
                     dataBinding.pbLoading.visibility = View.INVISIBLE
-                    this.newsArticles.addAll(articles.data!!)
+                    articles.data?.let {
+                        this.newsArticles.addAll(it)
+                    }
                     this.newsArticles.sortBy {
                         it.publishedAt
                     }
