@@ -5,23 +5,26 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.newsapp.R
 import com.example.newsapp.view.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.example.newsapp.R
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.messaging.ktx.remoteMessage
-
-const val CHANNEL_ID = "notification_channel"
-const val CHANNEL_NAME = "com.example.newsapp"
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Log.i("Halwa", message.toString())
-        if (message.notification != null) {
-            generateNotification(message.notification!!.title!!, message.notification!!.body!!)
+        super.onMessageReceived(message)
+
+        message.data.isNotEmpty().let {
+            if (it) {
+                // Perform necessary operations. I am just showing notification.
+                generateNotification(message.data[DATA_TITLE] ?: "", message.data[DATA_MESSAGE] ?: "")
+            }
+        }
+
+        message.notification?.let {
+            generateNotification(it.title ?: "", it.body ?: "")
         }
     }
 
@@ -48,5 +51,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         notificationManager.notify(0, builder.build())
+    }
+
+    companion object {
+        const val CHANNEL_ID = "notification_channel"
+        const val CHANNEL_NAME = "com.example.newsapp"
+
+        const val DATA_TITLE = "title"
+        const val DATA_MESSAGE = "message"
+
+        const val TOPIC = "/topics/my_topic"
     }
 }
